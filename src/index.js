@@ -1225,7 +1225,8 @@ export default class AuthnWidget {
         }
         if (input.type === 'tel') {
           let phoneIsValid = input.value.length > 0 && input.checkValidity() && isValidPhone(input.value);
-          if (!phoneIsValid) {
+          let allowedValue = document.getElementById("allowedValue").getAttribute("data-velocity-variable");
+          if (!phoneIsValid && allowedValue === "" ) {
             disabled = true;
           }
         }
