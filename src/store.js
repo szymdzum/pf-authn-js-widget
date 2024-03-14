@@ -14,6 +14,16 @@ export default class Store {
     this.checkRecaptcha = checkRecaptcha;
     this.pendingState = {};
     this.registrationflow = false;
+    this.cookieless = false;
+    this.stateHeader = '';
+  }
+
+  setCookieless(flag) {
+    this.cookieless = flag;
+  }
+
+  setStateHeader(stateHeader) {
+    this.stateHeader = stateHeader;
   }
 
   getStore() {
@@ -80,7 +90,7 @@ export default class Store {
     let json;
     let timeout;
     if (document.querySelector("#spinnerId")) {
-      timeout = setTimeout(function () {
+      timeout = setTimeout(function() {
         document.querySelector('#spinnerId').style.display = 'block';
         if (document.querySelector("#AuthnWidgetForm")) {
           document.querySelector("#AuthnWidgetForm").style.display = 'none';
@@ -92,14 +102,14 @@ export default class Store {
     }
     switch (method) {
       case 'GET_FLOW':
-        result = await this.fetchUtil.getFlow(this.flowId);
+        result = await this.fetchUtil.getFlow(this.flowId, this.buildHeaders());
         break;
       case 'INIT_REDIRECTLESS':
         result = await initRedirectless(this.baseUrl, payload);
         break;
       case 'POST_FLOW':
       default:
-        result = await this.fetchUtil.postFlow(this.flowId, actionid, payload);
+        result = await this.fetchUtil.postFlow(this.flowId, actionid, payload, this.buildHeaders());
         break;
     }
     json = await result.json();
@@ -155,13 +165,15 @@ export default class Store {
     } else {
       if (json.code === 'RESOURCE_NOT_FOUND') {
         this.state = {};
-      }
-      else {
+      } else {
         let errors = this.getErrorDetails(json);
         delete combinedData.failedValidators;
         delete combinedData.satisfiedValidators;
         delete combinedData.userMessages;
-        combinedData = { ...errors, ...this.state };
+        combinedData = { ...errors, ...this.state};
+        if (json._pf_authn_api_state) {
+          combinedData = { ...combinedData, _pf_authn_api_state: json._pf_authn_api_state };
+        }
       }
     }
     let daysToExpireMsg;
@@ -236,7 +248,6 @@ export default class Store {
     return errors;
   }
 
-
   notifyListeners() {
     console.log('notifying # of listeners: ' + this.listeners.length);
     this.listeners.forEach(observer => observer(this.prevState, this.state));
@@ -250,5 +261,14 @@ export default class Store {
   async poll(actionId = 'poll', body = '{}') {
     let result = await this.fetchUtil.postFlow(this.flowId, actionId, body);
     return await result.json();
+  }
+
+  buildHeaders() {
+    let headers = new Map();
+    if (!this.cookieless) {
+      return headers;
+    }
+    headers.set(this.stateHeader, `${this.state._pf_authn_api_state}`);
+    return headers;
   }
 }
