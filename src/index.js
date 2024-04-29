@@ -1266,6 +1266,7 @@ export default class AuthnWidget {
       widgetDiv.innerHTML = template(params);
     }
   }
+
   handleIdVerificationInProgress() {
     setTimeout(() => {
       this.store.dispatch('POST_FLOW', 'poll', '{}');
@@ -1295,8 +1296,7 @@ export default class AuthnWidget {
       this.store
         .dispatch('GET_FLOW')
         .catch(() => this.generalErrorRenderer(AuthnWidget.COMMUNICATION_ERROR_MSG));
-    }
-    else {
+    } else {
       this.pollCheckGetHandler = setTimeout(() => {
         this.pollCheckGet(currentVerificationCode, timeout);
       }, timeout);

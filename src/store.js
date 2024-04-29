@@ -1,6 +1,5 @@
 import { initRedirectless } from './utils/redirectless';
 import FetchUtil from './utils/fetchUtil';
-import fetchUtil from "./utils/fetchUtil";
 
 export default class Store {
   constructor(flowId, baseUrl, checkRecaptcha, options) {
@@ -170,7 +169,7 @@ export default class Store {
         delete combinedData.failedValidators;
         delete combinedData.satisfiedValidators;
         delete combinedData.userMessages;
-        combinedData = { ...errors, ...this.state};
+        combinedData = { ...errors, ...this.state };
         if (json._pf_authn_api_state) {
           combinedData = { ...combinedData, _pf_authn_api_state: json._pf_authn_api_state };
         }
@@ -259,7 +258,7 @@ export default class Store {
   }
 
   async poll(actionId = 'poll', body = '{}') {
-    let result = await this.fetchUtil.postFlow(this.flowId, actionId, body);
+    let result = await this.fetchUtil.postFlow(this.flowId, actionId, body, this.buildHeaders());
     return await result.json();
   }
 
