@@ -264,10 +264,9 @@ export default class Store {
 
   buildHeaders() {
     let headers = new Map();
-    if (!this.cookieless) {
-      return headers;
+    if (this.cookieless) {
+      headers.set(this.stateHeader, `${this.state._pf_authn_api_state}`);
     }
-    headers.set(this.stateHeader, `${this.state._pf_authn_api_state}`);
     return headers;
   }
 }
