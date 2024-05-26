@@ -13,6 +13,8 @@
 <!--  Enable the below script to use Captcha v2 -->
 <!--    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>-->
     <script type="text/javascript">
+
+
         var authnWidget;
         function checkRecaptcha(token) {
             console.log('captcha response: ' + token);
@@ -38,7 +40,7 @@
         }
 
         function onloadCallback() {
-            authnWidget = new PfAuthnWidget("{{baseUrl}}", {
+            authnWidget = new PfAuthnWidget(baseUrl, {
                 divId: 'authnwidget',
                 invokeReCaptcha: invokeReCaptcha,
                 checkRecaptcha: 'checkRecaptcha',
@@ -54,7 +56,8 @@
          *   --------------------------------------------------
         **/
         function load() {
-            var authnWidget = new PfAuthnWidget("{{baseUrl}}", { divId: 'authnwidget' });
+            let baseUrl = "https://pingfederate.dev-kingfisherplc.eu1.ping.cloud";
+            var authnWidget = new PfAuthnWidget(baseUrl, { divId: 'authnwidget' });
             // decide how to init the widget based on the mode option
             initWidget(authnWidget);
         }
@@ -106,8 +109,7 @@
 </head>
 
 <body>
-  <div class="content" style="padding: 30px">
-    <div class="heading">Authentication Application</div>
+  <div class="content">
     <div id="authnwidget"></div>
   </div>
 </body>
