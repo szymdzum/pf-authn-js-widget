@@ -8,10 +8,11 @@ import { getCompatibility, doWebAuthn, doRegisterWebAuthn } from './utils/fidoFl
 import { completeStateCallback, failedStateCallback, FLOW_TYPE_USER_AUTHZ, FLOW_TYPE_AUTHZ } from './utils/redirectless';
 import paOnAuthorizationRequest from './utils/paOnAuthorizationRequest';
 import paOnAuthorizationSuccess from './utils/paOnAuthorizationSuccess';
-import './scss/main.scss';
+
 import {isValidEmail, isValidPhone} from "./validators/inputs";
 //uncomment to add your personal branding
-// import './scss/branding.scss';
+import './scss/main.scss';
+import './scss/branding.scss';
 
 (function () {
 
